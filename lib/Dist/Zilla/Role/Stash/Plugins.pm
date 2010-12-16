@@ -194,25 +194,6 @@ sub separate_local_config {
 	return \%other;
 }
 
-=method stash_name
-
-Returns the stash name (including the '%').
-
-The default method attempts to guess it based on the package name.
-For example: C<Dist::Zilla::Stash::Example> will return C<%Example>.
-
-Overwrite this method if necessary.
-
-=cut
-
-sub stash_name {
-	my $class = ref($_[0]) || $_[0];
-	my ($pack) = ($class =~ /Dist::Zilla::Stash::(.+)$/);
-	confess "Stash name could not be determined from package name"
-		unless $pack;
-	return "%$pack";
-}
-
 no Moose::Role;
 1;
 
