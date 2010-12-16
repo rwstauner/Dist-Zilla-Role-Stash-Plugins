@@ -7,4 +7,10 @@ to store configuration arguments for other plugins.
 See POD in the modules for more information
 or L<Dist::Zilla::Stash::PodWeaver> which actually uses this role.
 
+=head1 HISTORY
+
+This repository was forked form the original
+L<Dist::Zilla::Stash::PodWeaver> repository
+after some of its components were generalized.
+
 =cut
