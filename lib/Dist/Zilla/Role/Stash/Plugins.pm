@@ -141,6 +141,9 @@ If not present, L</get_stashed_config> will be called.
 
 sub merge_stashed_config {
 	my ($self, $plugin, $opts) = @_;
+	$opts ||= {};
+	$opts->{join} = ' '
+		if !exists $opts->{join};
 	my $stashed = $opts->{stashed} || $self->get_stashed_config($plugin);
 
 	while( my ($key, $value) = each %$stashed ){
@@ -159,7 +162,7 @@ sub merge_stashed_config {
 			}
 			elsif( $type->name eq 'Str' ){
 				# TODO: pass in string for joining
-				$plugin->$key(join(' ', $previous, $value));
+				$plugin->$key(join($opts->{join}, $previous, $value));
 			}
 			#elsif( $type->name eq 'Bool' )
 			else {
