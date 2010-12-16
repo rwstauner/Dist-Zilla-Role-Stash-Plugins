@@ -1,16 +1,9 @@
-=head1 DESCRIPTION
+=head1 Dist::Zilla::Role::DynamicConfig
 
-This performs this L<Dist::Zilla::Role::Stash> role.
+This is a L<Dist::Zilla::Role> for accepting a dynamic configuration,
+along the lines of L<Dist::Zilla::Plugin::Prereqs>,
+or L<Dist::Zilla::Stash::PodWeaver> (which actually uses this role).
 
-When using L<Dist::Zilla::Plugin::PodWeaver>
-with a I<config_plugin> it's difficult to pass more
-configuration options to L<Pod::Weaver> plugins.
-
-This stash is intended to allow you to set other options in your F<dist.ini>
-that can be accessed by Pod::Weaver plugins.
-
-Because you know how you like your dists built,
-(and you're using PluginBundles to do it)
-but you need a little extra customization.
+See POD in the modules for more information.
 
 =cut

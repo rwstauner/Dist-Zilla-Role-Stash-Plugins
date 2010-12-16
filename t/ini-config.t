@@ -4,13 +4,15 @@ use Test::More;
 use Test::MockObject;
 
 use Dist::Zilla::Tester;
+use lib 't/lib';
+use Dist::Zilla::Stash::Test;
 
 my %confs = (
 	't/ini-none' => undef,
 	't/ini-sep'  => {
 		mods => {
-			'Pod::Weaver::Plugin::PlugName' => { 'Attr::Name' => 'oops' },
-			'Mod::Name' => { '!goo-ber' => 'nuts', pea => 'nut' }
+			'Test::Minus::PlugName' => { 'Attr::Name' => 'oops' },
+			'Test::Plus::Mod::Name' => { '!goo-ber' => 'nuts', pea => 'nut' }
 		},
 		'argument_separator'  => '^([^|]+)\|([^|]+)$',
 		_config => {
@@ -21,10 +23,10 @@ my %confs = (
 	},
 	't/ini-test' => {
 		mods => {
-			'Pod::Weaver::PluginBundle::ABundle' => {'fakeattr' => 'fakevalue1'},
-			'Pod::Weaver::Plugin::APlugin' => {'fakeattr' => 'fakevalue2'},
-			'Pod::Weaver::Section::ASection' => {'heading' => 'head5'},
-			'Pod::Weaver::Plugin::APlug::Name' => {'config' => 'confy'},
+			'Test::At::ABundle' => {'fakeattr' => 'fakevalue1'},
+			'Test::Minus::APlugin' => {'fakeattr' => 'fakevalue2'},
+			'Test::ASection' => {'heading' => 'head5'},
+			'Test::Minus::APlug::Name' => {'config' => 'confy'},
 		},
 		'argument_separator'  => '^(.+?)\W+(\w+)$',
 		_config => {
@@ -48,7 +50,7 @@ foreach my $dir ( keys %confs ){
 
 	my $mods = defined($confs{$dir}) ? delete($confs{$dir}->{mods}) : undef;
 
-	is_deeply($zilla->stash_named('%PodWeaver'), $confs{$dir}, "stash matches in $dir");
+	is_deeply($zilla->stash_named('%Test'), $confs{$dir}, "stash matches in $dir");
 
 	next unless $mods;
 
@@ -56,7 +58,7 @@ foreach my $dir ( keys %confs ){
 		$mock->fake_module($mod, new => sub { bless {}, $_[0] });
 		my $plug = $mod->new();
 		isa_ok($plug, $mod);
-		my $stash = Dist::Zilla::Stash::PodWeaver->get_stashed_config($plug, {zilla => $zilla});
+		my $stash = Dist::Zilla::Stash::Test->get_stashed_config($plug, {zilla => $zilla});
 		is_deeply($stash, $mods->{$mod}, 'stashed config expected');
 	}
 }
