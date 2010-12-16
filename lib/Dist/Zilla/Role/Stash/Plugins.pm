@@ -77,48 +77,39 @@ appropriate for the plugin passed to the method.
 
 	# from inside Dist::Zilla::Plugin::APlug
 
-	my $stashed =
-	Dist::Zilla::Stash::Example->get_stashed_config($self, \%opts);
+	if( my $stash = $self->zilla->stash_named('%Example') ){
+		my $stashed = $stash->get_stashed_config($self);
+	}
 
 	# $stashed => {
 	#   'attr1'   => 'value1',
 	#   'second'  => '2nd'
 	# }
 
-Possible options to be included in the hashref:
-
-=for :list
-* I<zilla>
-The current dist-zilla object (which contains the stash).
-
 =cut
 
 sub get_stashed_config {
-	# $class might be $self but it doesn't matter here
-	my ($class, $plugin, $opts) = @_;
-	$opts ||= {};
-	return unless my $zilla = $opts->{zilla};
-	return unless my $stash = $zilla->stash_named($class->stash_name);
+	my ($self, $plugin) = @_;
 
 	# use ref() rather than $plugin->plugin_name() because we want to match
 	# the full package name as returned by expand_package() below
 	# rather than '@Bundle/ShortPluginName'
 	my $name = ref($plugin);
 
-	my $config = $stash->_config;
+	my $config = $self->_config;
 	my $stashed = {};
-	my $splitter = qr/${\ $stash->argument_separator }/;
+	my $splitter = qr/${\ $self->argument_separator }/;
 
 	while( my ($key, $value) = each %$config ){
 		my ($plug, $attr) = ($key =~ $splitter);
 
 		unless($plug && $attr){
-			$zilla->log("'$key' did not match $splitter.  " .
+			warn("[${\ ref($self) }] '$key' did not match $splitter.  " .
 				"Do you need a more specific 'argument_separator'?");
 			next;
 		}
 
-		my $pack = $class->expand_package($plug);
+		my $pack = $self->expand_package($plug);
 
 		$stashed->{$attr} = $value
 			if $pack eq $name;
@@ -128,7 +119,7 @@ sub get_stashed_config {
 
 =method merge_stashed_config
 
-	Dist::Zilla::Stash::Example->merge_stashed_config($plugin, \%opts);
+	$stash->merge_stashed_config($plugin, \%opts);
 
 Get the stashed config (see L</get_stashed_config>),
 then attempt to merge it into the plugin.
@@ -145,17 +136,12 @@ Possible options:
 * I<stashed>
 A hashref like that returned from L</get_stashed_config>.
 If not present, L</get_stashed_config> will be called.
-* I<zilla>
-The current dist-zilla object.
-This is only needed if I<stashed> is not present.
 
 =cut
 
 sub merge_stashed_config {
-	my ($class, $plugin, $opts) = @_;
-	$opts ||= {};
-	my $stashed = $opts->{stashed};
-	return unless $stashed ||= $class->get_stashed_config($plugin, $opts);
+	my ($self, $plugin, $opts) = @_;
+	my $stashed = $opts->{stashed} || $self->get_stashed_config($plugin);
 
 	while( my ($key, $value) = each %$stashed ){
 		# call attribute writer (attribute must be 'rw'!)
