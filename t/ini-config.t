@@ -27,6 +27,7 @@ my %confs = (
 			'Test::Minus::APlugin' => {'fakeattr' => 'fakevalue2'},
 			'Test::ASection' => {'heading' => 'head5'},
 			'Test::Minus::APlug::Name' => {'config' => 'confy'},
+			'Test::Plugin' => {'strung' => 'high'},
 		},
 		'argument_separator'  => '^(.+?)\W+(\w+)$',
 		_config => {
@@ -34,6 +35,7 @@ my %confs = (
 			'-APlugin/fakeattr'    => 'fakevalue2',
 			'ASection->heading'    => 'head5',
 			'-APlug::Name::config' => 'confy',
+			'Plugin|strung'        => 'high',
 		}
 	}
 );
