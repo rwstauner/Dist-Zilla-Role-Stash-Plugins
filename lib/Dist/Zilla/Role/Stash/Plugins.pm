@@ -105,7 +105,7 @@ sub get_stashed_config {
 
 		unless($plug && $attr){
 			warn("[${\ ref($self) }] '$key' did not match $splitter.  " .
-				"Do you need a more specific 'argument_separator'?");
+				"Do you need a more specific 'argument_separator'?\n");
 			next;
 		}
 
@@ -146,6 +146,11 @@ sub merge_stashed_config {
 	while( my ($key, $value) = each %$stashed ){
 		# call attribute writer (attribute must be 'rw'!)
 		my $attr = $plugin->meta->find_attribute_by_name($key);
+		if( !$attr ){
+			warn("[${\ ref($self) }] skipping '$key' attribute: " .
+				"not found on ${\ ref($plugin) }\n");
+			next;
+		}
 		my $type = $attr->type_constraint;
 		my $previous = $plugin->$key;
 		if( $previous ){
