@@ -1,9 +1,10 @@
-=head1 Dist::Zilla::Role::DynamicConfig
+=head1 Dist::Zilla::Role::Stash::Plugins
 
-This is a L<Dist::Zilla::Role> for accepting a dynamic configuration,
-along the lines of L<Dist::Zilla::Plugin::Prereqs>,
-or L<Dist::Zilla::Stash::PodWeaver> (which actually uses this role).
+This is a L<Dist::Zilla::Role> for a L<Stash|Dist::Zilla::Role::Stash>
+which uses L<Dist::Zilla::Role::DynamicConfig>
+to store configuration arguments for other plugins.
 
-See POD in the modules for more information.
+See POD in the modules for more information
+or L<Dist::Zilla::Stash::PodWeaver> which actually uses this role.
 
 =cut
