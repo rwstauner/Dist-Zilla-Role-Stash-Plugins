@@ -5,7 +5,6 @@ use Test::MockObject;
 
 use Dist::Zilla::Tester;
 use lib 't/lib';
-use Dist::Zilla::Stash::Test;
 
 my %confs = (
 	't/ini-none' => undef,
@@ -60,7 +59,7 @@ foreach my $dir ( keys %confs ){
 		$mock->fake_module($mod, new => sub { bless {}, $_[0] });
 		my $plug = $mod->new();
 		isa_ok($plug, $mod);
-		my $stash = Dist::Zilla::Stash::Test->get_stashed_config($plug, {zilla => $zilla});
+		my $stash = $zilla->stash_named('%Test')->get_stashed_config($plug);
 		is_deeply($stash, $mods->{$mod}, 'stashed config expected');
 	}
 }
