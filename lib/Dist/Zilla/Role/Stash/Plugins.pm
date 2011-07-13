@@ -1,9 +1,10 @@
 # vim: set ts=2 sts=2 sw=2 expandtab smarttab:
+use strict;
+use warnings;
+
 package Dist::Zilla::Role::Stash::Plugins;
 # ABSTRACT: A Stash that stores arguments for plugins
 
-use strict;
-use warnings;
 use Moose::Role;
 with qw(
   Dist::Zilla::Role::DynamicConfig
