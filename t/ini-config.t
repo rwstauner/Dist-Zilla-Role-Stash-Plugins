@@ -16,6 +16,7 @@ my %confs = (
 		'argument_separator'  => '^([^|]+)\|([^|]+)$',
 		_config => {
 			'-PlugName|Attr::Name' => 'oops',
+      # this one fails sometimes
 			'+Mod::Name|!goo-ber'  => 'nuts',
 			'+Mod::Name|pea'       => 'nut',
 		}
@@ -30,6 +31,7 @@ my %confs = (
 		},
 		'argument_separator'  => '^(.+?)\W+(\w+)$',
 		_config => {
+      # this one fails sometimes
 			'@ABundle-fakeattr'    => 'fakevalue1',
 			'-APlugin/fakeattr'    => 'fakevalue2',
 			'ASection->heading'    => 'head5',
@@ -51,7 +53,9 @@ foreach my $dir ( keys %confs ){
 
 	my $mods = defined($confs{$dir}) ? delete($confs{$dir}->{mods}) : undef;
 
-	is_deeply($zilla->stash_named('%Test'), $confs{$dir}, "stash matches in $dir");
+  my $stash = $zilla->stash_named('%Test');
+	is_deeply($stash, $confs{$dir}, "stash matches in $dir")
+    or diag explain [$stash => not => $confs{$dir}];
 
 	next unless $mods;
 
