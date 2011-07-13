@@ -1,3 +1,4 @@
+# vim: set ts=2 sts=2 sw=2 expandtab smarttab:
 package Dist::Zilla::Role::Stash::Plugins;
 # ABSTRACT: A Stash that stores arguments for plugins
 
@@ -5,8 +6,8 @@ use strict;
 use warnings;
 use Moose::Role;
 with qw(
-	Dist::Zilla::Role::DynamicConfig
-	Dist::Zilla::Role::Stash
+  Dist::Zilla::Role::DynamicConfig
+  Dist::Zilla::Role::Stash
 );
 
 # we could define a 'plugged' module attribute and create a generic
@@ -32,19 +33,19 @@ if you need to assign to an attribute in a package that contains
 non-word characters.
 This is an example (taken from the tests in F<t/ini-sep>).
 
-	# dist.ini
-	[%Example]
-	argument_separator = ^([^|]+)\|([^|]+)$
-	-PlugName|Attr::Name = oops
-	+Mod::Name|!goo-ber = nuts
+  # dist.ini
+  [%Example]
+  argument_separator = ^([^|]+)\|([^|]+)$
+  -PlugName|Attr::Name = oops
+  +Mod::Name|!goo-ber = nuts
 
 =cut
 
 has argument_separator => (
-    is       => 'ro',
-    isa      => 'Str',
-	# "Module::Name:variable" "-Plugin/variable"
-    default  => '^(.+?)\W+(\w+)$'
+  is       => 'ro',
+  isa      => 'Str',
+  # "Module::Name:variable" "-Plugin/variable"
+  default  => '^(.+?)\W+(\w+)$'
 );
 
 =attr _config
@@ -68,58 +69,58 @@ determined by C<< ref($plugin) >>.
 This is a slice of the I<_config> attribute
 appropriate for the plugin passed to the method.
 
-	# with a stash of:
-	# _config => {
-	#   'APlug:attr1'   => 'value1',
-	#   'APlug:second'  => '2nd',
-	#   'OtherPlug:attr => '0'
-	# }
+  # with a stash of:
+  # _config => {
+  #   'APlug:attr1'   => 'value1',
+  #   'APlug:second'  => '2nd',
+  #   'OtherPlug:attr => '0'
+  # }
 
-	# from inside Dist::Zilla::Plugin::APlug
+  # from inside Dist::Zilla::Plugin::APlug
 
-	if( my $stash = $self->zilla->stash_named('%Example') ){
-		my $stashed = $stash->get_stashed_config($self);
-	}
+  if( my $stash = $self->zilla->stash_named('%Example') ){
+    my $stashed = $stash->get_stashed_config($self);
+  }
 
-	# $stashed => {
-	#   'attr1'   => 'value1',
-	#   'second'  => '2nd'
-	# }
+  # $stashed => {
+  #   'attr1'   => 'value1',
+  #   'second'  => '2nd'
+  # }
 
 =cut
 
 sub get_stashed_config {
-	my ($self, $plugin) = @_;
+  my ($self, $plugin) = @_;
 
-	# use ref() rather than $plugin->plugin_name() because we want to match
-	# the full package name as returned by expand_package() below
-	# rather than '@Bundle/ShortPluginName'
-	my $name = ref($plugin);
+  # use ref() rather than $plugin->plugin_name() because we want to match
+  # the full package name as returned by expand_package() below
+  # rather than '@Bundle/ShortPluginName'
+  my $name = ref($plugin);
 
-	my $config = $self->_config;
-	my $stashed = {};
-	my $splitter = qr/${\ $self->argument_separator }/;
+  my $config = $self->_config;
+  my $stashed = {};
+  my $splitter = qr/${\ $self->argument_separator }/;
 
-	while( my ($key, $value) = each %$config ){
-		my ($plug, $attr) = ($key =~ $splitter);
+  while( my ($key, $value) = each %$config ){
+    my ($plug, $attr) = ($key =~ $splitter);
 
-		unless($plug && $attr){
-			warn("[${\ ref($self) }] '$key' did not match $splitter.  " .
-				"Do you need a more specific 'argument_separator'?\n");
-			next;
-		}
+    unless($plug && $attr){
+      warn("[${\ ref($self) }] '$key' did not match $splitter.  " .
+        "Do you need a more specific 'argument_separator'?\n");
+      next;
+    }
 
-		my $pack = $self->expand_package($plug);
+    my $pack = $self->expand_package($plug);
 
-		$stashed->{$attr} = $value
-			if $pack eq $name;
-	}
-	return $stashed;
+    $stashed->{$attr} = $value
+      if $pack eq $name;
+  }
+  return $stashed;
 }
 
 =method merge_stashed_config
 
-	$stash->merge_stashed_config($plugin, \%opts);
+  $stash->merge_stashed_config($plugin, \%opts);
 
 Get the stashed config (see L</get_stashed_config>),
 then attempt to merge it into the plugin.
@@ -140,42 +141,42 @@ If not present, L</get_stashed_config> will be called.
 =cut
 
 sub merge_stashed_config {
-	my ($self, $plugin, $opts) = @_;
-	$opts ||= {};
-	$opts->{join} = ' '
-		if !exists $opts->{join};
-	my $stashed = $opts->{stashed} || $self->get_stashed_config($plugin);
+  my ($self, $plugin, $opts) = @_;
+  $opts ||= {};
+  $opts->{join} = ' '
+    if !exists $opts->{join};
+  my $stashed = $opts->{stashed} || $self->get_stashed_config($plugin);
 
-	while( my ($key, $value) = each %$stashed ){
-		# call attribute writer (attribute must be 'rw'!)
-		my $attr = $plugin->meta->find_attribute_by_name($key);
-		if( !$attr ){
-			warn("[${\ ref($self) }] skipping '$key' attribute: " .
-				"not found on ${\ ref($plugin) }\n");
-			next;
-		}
-		my $type = $attr->type_constraint;
-		my $previous = $plugin->$key;
-		if( $previous ){
-			if( UNIVERSAL::isa($previous, 'ARRAY') ){
-				push(@$previous, $value);
-			}
-			elsif( $type->name eq 'Str' ){
-				# TODO: pass in string for joining
-				$plugin->$key(join($opts->{join}, $previous, $value));
-			}
-			#elsif( $type->name eq 'Bool' )
-			else {
-				$plugin->$key($value);
-			}
-		}
-		else {
-			$value = [$value]
-				if $type->name =~ /^arrayref/i;
+  while( my ($key, $value) = each %$stashed ){
+    # call attribute writer (attribute must be 'rw'!)
+    my $attr = $plugin->meta->find_attribute_by_name($key);
+    if( !$attr ){
+      warn("[${\ ref($self) }] skipping '$key' attribute: " .
+        "not found on ${\ ref($plugin) }\n");
+      next;
+    }
+    my $type = $attr->type_constraint;
+    my $previous = $plugin->$key;
+    if( $previous ){
+      if( UNIVERSAL::isa($previous, 'ARRAY') ){
+        push(@$previous, $value);
+      }
+      elsif( $type->name eq 'Str' ){
+        # TODO: pass in string for joining
+        $plugin->$key(join($opts->{join}, $previous, $value));
+      }
+      #elsif( $type->name eq 'Bool' )
+      else {
+        $plugin->$key($value);
+      }
+    }
+    else {
+      $value = [$value]
+        if $type->name =~ /^arrayref/i;
 
-			$plugin->$key($value);
-		}
-	}
+      $plugin->$key($value);
+    }
+  }
 }
 
 =method separate_local_config
@@ -190,16 +191,16 @@ Overwrite this if necessary.
 =cut
 
 sub separate_local_config {
-	my ($self, $config) = @_;
-	# keys for other plugins should include non-word characters
-	# (like "-Plugin::Name:variable"), so any keys that are only
-	# word characters (valid identifiers) are for this object.
-	my @local = grep { /^\w+$/ } keys %$config;
-	my %other;
-	@other{@local} = delete @$config{@local}
-		if @local;
+  my ($self, $config) = @_;
+  # keys for other plugins should include non-word characters
+  # (like "-Plugin::Name:variable"), so any keys that are only
+  # word characters (valid identifiers) are for this object.
+  my @local = grep { /^\w+$/ } keys %$config;
+  my %other;
+  @other{@local} = delete @$config{@local}
+    if @local;
 
-	return \%other;
+  return \%other;
 }
 
 no Moose::Role;
