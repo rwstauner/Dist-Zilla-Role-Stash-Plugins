@@ -2,7 +2,10 @@ Revision history for Dist::Zilla::Role::Stash::Plugins
 
 {{$NEXT}}
 
+1.003     2011-07-15T00:41:43Z
+
   - Superficial dist/release changes
+  - Extra debug output in tests
 
 1.002005  2010-12-16T16:37:12Z
 
