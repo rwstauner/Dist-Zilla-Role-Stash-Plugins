@@ -174,6 +174,12 @@ no Moose::Role;
 
 =for :stopwords dist-zilla zilla
 
+=head1 SYNOPSIS
+
+  # in Dist::Zilla::Stash::MyStash
+
+  with 'Dist::Zilla::Role::Stash::Plugins';
+
 =head1 DESCRIPTION
 
 This is a role for a L<Stash|Dist::Zilla::Role::Stash>
