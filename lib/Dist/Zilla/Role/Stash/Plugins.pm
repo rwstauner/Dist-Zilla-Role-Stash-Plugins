@@ -172,6 +172,9 @@ no Moose::Role;
 
 =for :stopwords dist-zilla zilla
 
+=for test_synopsis
+sub with;
+
 =head1 SYNOPSIS
 
   # in Dist::Zilla::Stash::MyStash
