@@ -4,6 +4,11 @@ Revision history for Dist::Zilla::Role::Stash::Plugins
 
   - Move much of the logic out to Config::MVP::Slicer
 
+  [Incompatible Changes]
+  - Drop the default 'join' functionality which probably wasn't a good idea.
+    DZ Stash PodWeaver is the only dist declaring this role as a prereq
+    and that has no attributes that could use it (no plain Str attributes).
+
 1.003     2011-07-15T00:41:43Z
 
   - Superficial dist/release changes

@@ -138,8 +138,8 @@ If not present, L</get_stashed_config> will be called.
 sub merge_stashed_config {
   my ($self, $plugin, $opts) = @_;
   $opts ||= {};
-  $opts->{join} = ' '
-    if !exists $opts->{join};
+  # TODO: is this join useful?
+  #$opts->{join} = ' ' if !exists $opts->{join};
   $opts->{stashed} ||= $self->get_stashed_config($plugin);
   $opts->{slice} = delete $opts->{stashed};
   return $self->slicer->merge($plugin, $opts);

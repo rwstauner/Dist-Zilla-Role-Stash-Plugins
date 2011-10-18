@@ -36,8 +36,10 @@ sub attr_hash {
   @{$stash->{_config}}{qw(Plugin|strung Plugin-arr)} = qw(highest matey);
   is_deeply($stash->get_stashed_config($plug), {strung => 'highest', arr => 'matey'}, 'get_stashed_config');
 
-  $stash->merge_stashed_config($plug);
+  # NOTE: this 'join' functionality may be removed at some point
+  $stash->merge_stashed_config($plug, {join => ' '});
   is_deeply(attr_hash($plug), {arr => ['empty array?', 'matey'], strung => 'higher highest', not => 'not'}, 'merge_stashed_config');
+
   # no change
   $stash->merge_stashed_config($plug, {stashed => {}});
   is_deeply(attr_hash($plug), {arr => ['empty array?', 'matey'], strung => 'higher highest', not => 'not'}, 'merge_stashed_config with stashed');
@@ -45,6 +47,7 @@ sub attr_hash {
   $stash->merge_stashed_config($plug, {stashed => {arr => 'ahoy'}});
   is_deeply(attr_hash($plug), {arr => ['empty array?', 'matey', 'ahoy'], strung => 'higher highest', not => 'not'}, 'merge_stashed_config with stashed');
 
+  # NOTE: this 'join' functionality may be removed at some point
   $stash->merge_stashed_config($plug, {stashed => {strung => 'up'}, join => '-'});
   is_deeply(attr_hash($plug), {arr => ['empty array?', 'matey', 'ahoy'], strung => 'higher highest-up', not => 'not'}, 'merge_stashed_config with stashed');
 
