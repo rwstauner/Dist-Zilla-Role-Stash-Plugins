@@ -51,6 +51,13 @@ sub attr_hash {
   $stash->merge_stashed_config($plug, {stashed => {strung => 'up'}, join => '-'});
   is_deeply(attr_hash($plug), {arr => ['empty array?', 'matey', 'ahoy'], strung => 'higher highest-up', not => 'not'}, 'merge_stashed_config with stashed');
 
+  $stash->merge_stashed_config($plug, {stashed => {strung => 'up'}});
+  is_deeply(attr_hash($plug), {arr => ['empty array?', 'matey', 'ahoy'], strung => 'up', not => 'not'}, 'merge_stashed_config with stashed');
+
+  $stash->merge_stashed_config($plug);
+  is_deeply(attr_hash($plug), {arr => ['empty array?', 'matey', 'ahoy', 'matey'], strung => 'highest', not => 'not'}, 'merge_stashed_config with stashed');
+
+
 }
 
 done_testing;
