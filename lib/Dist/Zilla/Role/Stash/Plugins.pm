@@ -111,6 +111,7 @@ This is a thin wrapper around L<Config::MVP::Slicer/slice>.
 sub get_stashed_config {
   my ($self, $plugin) = @_;
 
+  # TODO: should we compare liberal argument_separator to strict one and warn if not matched?
 
   return $self->slicer->slice($plugin);
 }
