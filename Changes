@@ -2,6 +2,8 @@ Revision history for Dist::Zilla::Role::Stash::Plugins
 
 {{$NEXT}}
 
+1.004     2011-10-19T23:36:58Z
+
   - Move much of the logic out to Config::MVP::Slicer
 
   [Incompatible Changes]
