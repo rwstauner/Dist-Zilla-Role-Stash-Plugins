@@ -31,7 +31,7 @@ my %confs = (
       'Test::Minus::APlug::Name' => {'config' => 'confy'},
       'Test::Plugin' => {'strung' => 'high'},
     },
-    'argument_separator'  => '^(.+?)\W+(\w+)$',
+    'argument_separator'  => '(.+?)\W+(\w+)',
     _config => {
       # this one fails sometimes
       '@ABundle-fakeattr'    => 'fakevalue1',

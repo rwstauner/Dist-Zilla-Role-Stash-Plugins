@@ -24,7 +24,7 @@ A regular expression that will capture
 the package name in C<$1> and
 the attribute name in C<$2>.
 
-Defaults to C<< ^(.+?)\W+(\w+)$ >>
+Defaults to C<< (.+?)\W+(\w+) >>
 which means the package variable and the attribute
 will be separated by non-word characters
 (which assumes the attributes will be
@@ -37,9 +37,12 @@ This is an example (taken from the tests in F<t/ini-sep>).
 
   # dist.ini
   [%Example]
-  argument_separator = ^([^|]+)\|([^|]+)$
+  argument_separator = ([^|]+)\|([^|]+?)
   -PlugName|Attr::Name = oops
   +Mod::Name|!goo-ber = nuts
+
+B<Note> that the regexp should not be anchored as it actually becomes
+the middle of a larger regexp (see L<Config::MVP::Slicer/separator>).
 
 =cut
 
@@ -47,7 +50,7 @@ has argument_separator => (
   is       => 'ro',
   isa      => 'Str',
   # "Module::Name:variable" "-Plugin/variable"
-  default  => '^(.+?)\W+(\w+)$'
+  default  => '(.+?)\W+(\w+)',
 );
 
 =attr _config
