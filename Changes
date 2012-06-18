@@ -2,6 +2,11 @@ Revision history for Dist::Zilla::Role::Stash::Plugins
 
 {{$NEXT}}
 
+1.005     2012-06-18T17:56:42Z
+
+  - Unanchor the default argument_separator regexp so that array subscript
+    config lines work.  Thanks to Keedi Kim for reporting this bug.
+
 1.004     2011-10-19T23:36:58Z
 
   - Move much of the logic out to Config::MVP::Slicer
