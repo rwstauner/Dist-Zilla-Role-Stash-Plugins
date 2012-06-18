@@ -58,7 +58,7 @@ foreach my $dir ( keys %confs ){
   my $stash = $zilla->stash_named('%Test');
   my @fields = qw(argument_separator _config);
   is_deeply([@$stash{@fields}], [@{$confs{$dir}}{@fields}], "stash matches in $dir")
-    or diag explain [$stash => not => $confs{$dir}];
+    or $ENV{AUTOMATED_TESTING} && diag explain [$stash => not => $confs{$dir}];
 
   next unless $mods;
 
