@@ -36,6 +36,8 @@ sub attr_hash {
   @{$stash->{_config}}{qw(Plugin|strung Plugin-arr)} = qw(highest matey);
   is_deeply($stash->get_stashed_config($plug), {strung => 'highest', arr => 'matey'}, 'get_stashed_config');
 
+  # from here we keep merging the config into the plugin:
+
   $stash->merge_stashed_config($plug);
   is_deeply(attr_hash($plug), {arr => ['empty array?', 'matey'], strung => 'highest', not => 'not'}, 'merge_stashed_config');
 
@@ -52,6 +54,13 @@ sub attr_hash {
   $stash->merge_stashed_config($plug);
   is_deeply(attr_hash($plug), {arr => ['empty array?', 'matey', 'ahoy', 'matey'], strung => 'highest', not => 'not'}, 'merge_stashed_config with stashed');
 
+  @{$stash->{_config}}{qw(Plugin-arr[2] Plugin-arr[1])} = qw(arr2 arr1);
+
+  $stash->merge_stashed_config($plug);
+  is_deeply
+    attr_hash($plug),
+    {arr => ['empty array?', 'matey', 'ahoy', 'matey', 'matey', 'arr1', 'arr2'], strung => 'highest', not => 'not'},
+    'merge_stashed_config with stashed array elements';
 
 }
 
