@@ -2,6 +2,11 @@ Revision history for Dist::Zilla::Role::Stash::Plugins
 
 {{$NEXT}}
 
+  [Bug Fixes]
+  - Fix missing 'lazy' specification for slicer attribute
+    made evident by hash randomization in perl 5.17.6.
+    Thanks to Andreas König for the very helpful report [rt-81716].
+
   [Tests]
   - Fix a bug in the tests causing failures in some 5.8 perls.
 

@@ -76,6 +76,7 @@ which handles plugin configuration extraction.
 has slicer => (
   is       => 'ro',
   isa      => 'Config::MVP::Slicer',
+  lazy     => 1,
   default  => sub {
     my $self = shift;
     Config::MVP::Slicer->new({
@@ -157,6 +158,8 @@ contain non-word characters.
 Overwrite this if necessary.
 
 =cut
+
+# this is a class method required by Dist::Zilla::Role::DynamicConfig
 
 sub separate_local_config {
   my ($self, $config) = @_;
