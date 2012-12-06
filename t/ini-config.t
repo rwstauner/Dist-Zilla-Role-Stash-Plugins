@@ -67,7 +67,8 @@ foreach my $dir ( keys %confs ){
     my $plug = $mod->new();
     isa_ok($plug, $mod);
     my $stash = $zilla->stash_named('%Test')->get_stashed_config($plug);
-    is_deeply($stash, $mods->{$mod}, 'stashed config expected');
+    is_deeply($stash, $mods->{$mod}, "stashed config expected for $mod in $dir")
+      or diag explain [$plug, $stash, $mods->{$mod}, $zilla->stash_named('%Test')];
   }
 }
 

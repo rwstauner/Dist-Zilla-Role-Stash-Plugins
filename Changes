@@ -2,6 +2,9 @@ Revision history for Dist::Zilla::Role::Stash::Plugins
 
 {{$NEXT}}
 
+  [Tests]
+  - Fix a bug in the tests causing failures in some 5.8 perls.
+
 1.005     2012-06-18T17:56:42Z
 
   - Unanchor the default argument_separator regexp so that array subscript

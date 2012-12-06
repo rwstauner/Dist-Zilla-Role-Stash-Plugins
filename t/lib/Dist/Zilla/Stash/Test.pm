@@ -9,12 +9,16 @@ with 'Dist::Zilla::Role::Stash::Plugins';
 
 sub expand_package {
   my ($self, $pack) = @_;
+
   my %exp = qw(
     + Plus
     - Minus
     @ At
   );
-  $pack =~ s/^([@+-])/$exp{$1}::/;
+
+  # escape the @ symbol to avoid spurious warnings and test failures on 5.8.x
+  $pack =~ s/^(\@|[+-])/$exp{$1}::/;
+
   "Test::$pack";
 }
 
