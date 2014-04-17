@@ -174,6 +174,41 @@ sub separate_local_config {
   return \%other;
 }
 
+=method _append_mvp_values
+
+  # in some other plugin...
+  my $stash = $self->zilla->stash_named('%Dashie');
+  $stash->_append_mvp_value('Something.mvp' => [ qw{ one two three } ]);
+  # single value is legit, too
+  $stash->_append_mvp_value('Something.mvp' => 'four');
+
+This is a helper method mainly intended for use in plugins seeking to
+manipulate the hash stored in _config -- that is, the raw, stashed hash of
+plugin options being stored in the implementing stash.
+
+Rather than clobber any existing MVP keys, it provides a consistent method of
+appending the values given to the next free slots.
+
+=cut
+
+sub _append_mvp_values {
+  my ($self, $key, $values) = @_;
+
+  # make life a little easier for single values...
+  $values = [ $values ]
+    unless ref $values;
+
+  my $i      = -1;
+  my $config = $self->_config;
+
+  do { $i++ }
+    while exists $config->{$key."[$i]"};
+  do { $config->{$key."[$i]"} = $_; $i++ }
+    for @$values;
+
+  return;
+}
+
 no Moose::Role;
 1;
 
